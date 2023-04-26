@@ -33,7 +33,6 @@ const main = async () => {
   for (const row of data.slice(START_ROW, data.length)) {
     for (const columnIdx in row) {
       const value = row[columnIdx];
-      console.log("value", value);
       // We assume that columns are:  FABRICA CONCAT | 	WAREHOUSE SKU | 	FT STYLE | 	FT COLOR	| FT SIZE	| UNITS	| Cost(WAC)	| PO
       if (fields.includes(Number(columnIdx))) {
         robot.typeString(value);
