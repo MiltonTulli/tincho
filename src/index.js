@@ -31,6 +31,18 @@ function sleep(s) {
   return new Promise((resolve) => setTimeout(resolve, s * 1000));
 }
 
+const getMaxInputLenght = (index) => {
+  return {
+    0: 12,
+    1: 4,
+    2: 4,
+    3: 4,
+    4: 20,
+    5: 7,
+    6: 11,
+  }[index];
+};
+
 const main = async () => {
   // TODO: wait or confirm before start;
   console.log("Sleeping, please click on first input");
@@ -41,21 +53,21 @@ const main = async () => {
     for (const columnIdx in row) {
       const value = row[columnIdx];
       // We assume that columns are:  FABRICA CONCAT | 	WAREHOUSE SKU | 	FT STYLE | 	FT COLOR	| FT SIZE	| UNITS	| Cost(WAC)	| PO
-      if (!!value) {2
+      if (!!value) {
+        2;
         robot.typeString(value);
       }
       // Get end of row
       if (Number(columnIdx) === row.length - 1) {
-          robot.keyTap("f9"); // submit
-          robot.keyTap("f12"); // refresh
-          robot.keyTap("f9"); // back to form
+        robot.keyTap("f9"); // submit
+        robot.keyTap("f12"); // refresh
+        robot.keyTap("f9"); // back to form
         // robot.keyTap("enter");
-      } else {0
-        if ([1, 2].includes(Number(columnIdx)) && String(value).trim().length === 4){
-          // skip tab. Autotab enabled when input.length = 4
-        } else {
+      } else {
+        if (
+          String(value).trim().length < getMaxInputLenght(Number(columnIdx))
+        ) {
           robot.keyTap("tab");
-
         }
       }
     }
