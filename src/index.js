@@ -4,8 +4,13 @@ const path = require("path");
 const xlsx = require("node-xlsx");
 const robot = require("robotjs");
 
-const { INPUT_EXCEL_LOCATION, INPUT_EXCEL_NAME, SHEET_NAME, START_ROW } =
-  process.env;
+const {
+  INPUT_EXCEL_LOCATION,
+  INPUT_EXCEL_NAME,
+  SHEET_NAME,
+  START_ROW,
+  INITIAL_COUNTDOWN,
+} = process.env;
 
 const getData = () => {
   // Read csv
@@ -42,8 +47,8 @@ const main = async () => {
 
       // Get end of row
       if (Number(columnIdx) === row.length - 1) {
-        robot.keyTap("f9");
-        // robot.keyTap("enter");
+        // robot.keyTap("f9");
+        robot.keyTap("enter");
       } else {
         robot.keyTap("tab");
       }
