@@ -41,16 +41,22 @@ const main = async () => {
     for (const columnIdx in row) {
       const value = row[columnIdx];
       // We assume that columns are:  FABRICA CONCAT | 	WAREHOUSE SKU | 	FT STYLE | 	FT COLOR	| FT SIZE	| UNITS	| Cost(WAC)	| PO
-      if (!!value) {
+      if (!!value) {2
         robot.typeString(value);
       }
-
       // Get end of row
       if (Number(columnIdx) === row.length - 1) {
-        // robot.keyTap("f9");
-        robot.keyTap("enter");
-      } else {
-        robot.keyTap("tab");
+          robot.keyTap("f9"); // submit
+          robot.keyTap("f12"); // refresh
+          robot.keyTap("f9"); // back to form
+        // robot.keyTap("enter");
+      } else {0
+        if ([1, 2].includes(Number(columnIdx)) && String(value).trim().length === 4){
+          // skip tab. Autotab enabled when input.length = 4
+        } else {
+          robot.keyTap("tab");
+
+        }
       }
     }
   }

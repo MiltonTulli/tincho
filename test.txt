@@ -1,0 +1,5 @@
+Pasos: 
+1. Abrir el programita en la vista para cargar la gilada
+2. Poner la fecha (ship date)
+3. ejecutar boot.bat como admin
+4. Hacer focus ene l primer input
