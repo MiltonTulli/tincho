@@ -12,7 +12,10 @@ const getData = () => {
   const file = xlsx.parse(
     fs.readFileSync(
       path.resolve(path.join(INPUT_EXCEL_LOCATION + "/" + INPUT_EXCEL_NAME))
-    )
+    ),
+    {
+      defval: "",
+    }
   );
   const sheetData = file.find((sheet) => sheet.name === SHEET_NAME)?.data;
 
@@ -26,22 +29,23 @@ function sleep(s) {
 const main = async () => {
   // TODO: wait or confirm before start;
   console.log("Sleeping, please click on first input");
-  await sleep(2);
+  await sleep(Number(INITIAL_COUNTDOWN));
   console.log("starting...");
   const data = getData();
-  const fields = [3, 4, 5, 6, 7];
   for (const row of data.slice(START_ROW, data.length)) {
     for (const columnIdx in row) {
       const value = row[columnIdx];
       // We assume that columns are:  FABRICA CONCAT | 	WAREHOUSE SKU | 	FT STYLE | 	FT COLOR	| FT SIZE	| UNITS	| Cost(WAC)	| PO
-      if (fields.includes(Number(columnIdx))) {
+      if (!!value) {
         robot.typeString(value);
-        robot.keyTap("tab");
       }
+
       // Get end of row
       if (Number(columnIdx) === row.length - 1) {
-        // robot.keyTap("f9");
-        robot.keyTap("enter");
+        robot.keyTap("f9");
+        // robot.keyTap("enter");
+      } else {
+        robot.keyTap("tab");
       }
     }
   }
