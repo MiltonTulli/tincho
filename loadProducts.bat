@@ -1,2 +1,2 @@
 cd C:\Users\Tincho\Documents\tincho
-npm i && npm start
+npm i && npm run loadProducts
