@@ -3,52 +3,44 @@ const robot = require("robotjs");
 const { getExcelData, sleep } = require("../utils");
 const { START_ROW, INITIAL_COUNTDOWN } = process.env;
 
-const ACTION = process.argv[2];
-
-const isActivate = ACTION === "activate" ? true : false;
-
-console.log("ACTION", ACTION);
-
 // Return max lenght for each input index
 const getMaxInputLenght = (index) => {
   return {
     0: 12,
     1: 4,
     2: 4,
+    3: 1,
   }[index];
 };
 
 const main = async () => {
-  // TODO: wait or confirm before start;
   console.log("Sleeping, please click on first input");
   await sleep(Number(INITIAL_COUNTDOWN));
   console.log("starting...");
   const data = getExcelData({ sheetName: "status" });
   for (const row of data.slice(START_ROW, data.length)) {
     for (const columnIdx in row) {
-      const value = row[columnIdx];
-      if (!!value) {
-        robot.typeString(value);
-      }
-      // Get end of row
+      const value = row[columnIdx].trim();
+      // Get end of row - LAST COLUMN = STATUS COLUMN
       if (Number(columnIdx) === row.length - 1) {
-        robot.keyTap("enter"); // submit and enter to
         // enter to product page
-        await sleep(100);
-        Array.from(Array(21)).map(async () => {
+        robot.keyTap("enter");
+        // tab until status field
+        Array.from(Array(21)).map(() => {
           robot.keyTap("tab");
-          await sleep(10);
         });
-        if (isActivate) {
-          // activate input
-        } else {
-          // deactivating
-          // solo la D y ya.
-          robot.typeString(value);
-        }
+        // Clean field
+        robot.keyTap("end");
+        // Add value (D, '')
+        robot.typeString(value);
 
-        // F10 para guardar.
+        // save
+        robot.keyTap("f10");
       } else {
+        // Clean field
+        robot.keyTap("end");
+        // type value
+        robot.typeString(value);
         if (
           String(value).trim().length < getMaxInputLenght(Number(columnIdx))
         ) {
@@ -56,7 +48,6 @@ const main = async () => {
         }
       }
     }
-    // cambio de fila
   }
 };
 
