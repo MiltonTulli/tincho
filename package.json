@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node ./src/controllers/testKeys.js",
     "loadProducts": "node ./src/controllers/loadProducts.js",
-    "activateProductsStatus": "node ./src/controllers/changeProductsStatus.js activate"
+    "changeProductsStatus": "node ./src/controllers/changeProductsStatus.js"
   },
   "author": "Miltor",
   "license": "ISC",
