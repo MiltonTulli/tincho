@@ -41,8 +41,8 @@ const main = async () => {
   const colIndexToChangeView = 3;
   for (const row of data.slice(START_ROW, data.length)) {
     for (const columnIdx in row) {
-      const value = row[columnIdx].trim();
       const idx = Number(columnIdx);
+      const value = row[idx];
       const maxInputLenght = getMaxInputLenght(idx);
       const slicedValue = String(value)?.trim().slice(0, maxInputLenght);
       if (idx >= colIndexToChangeView) {
