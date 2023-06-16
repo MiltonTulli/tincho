@@ -15,7 +15,9 @@ const getExcelData = ({ sheetName }) => {
     }
   );
   const sheetData = file.find((sheet) => sheet.name === sheetName)?.data;
-
+  if (!sheetData) {
+    throw new Error(`getExcelData:: sheetData "${sheetName}" not found`);
+  }
   return sheetData;
 };
 
