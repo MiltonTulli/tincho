@@ -1,2 +1,2 @@
 cd C:\Users\Tincho\Documents\tincho
-npm i && npm run loadProducts
+git clean -fd && git checkout . && git pull origin main && npm i && npm run loadProducts
