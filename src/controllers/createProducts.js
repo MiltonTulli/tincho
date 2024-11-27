@@ -8,10 +8,12 @@
  */
 
 require("dotenv").config();
-const robot = require("robotjs");
+const r = require("robotjs");
+const tr = require("../utils/testRobot");
 const { getExcelData, sleep, range } = require("../utils");
 const { START_ROW, INITIAL_COUNTDOWN } = process.env;
 
+const robot = process.env.NODE_ENV === "development" ? tr : r;
 // Return max lenght for each input index
 const getMaxInputLenght = (index) => {
   return {
@@ -20,6 +22,8 @@ const getMaxInputLenght = (index) => {
     2: 4,
     3: 30, // description
     4: 20, // vendor
+    5: 10, // CUST PRICE
+    6: 12, // LANDED COST
   }[index];
 };
 
@@ -30,6 +34,8 @@ const tabsBeforeInput = (index) => {
     2: 2,
     3: 0, // description
     4: 8, // vendor
+    5: 26, // CUST PRICE
+    6: 30, // LANDED COST
   }[index];
 };
 
@@ -38,8 +44,10 @@ const main = async () => {
   await sleep(Number(INITIAL_COUNTDOWN));
   console.log("starting...");
   const data = getExcelData({ sheetName: "create" });
+  // A partir de este indice debería cambiar de "vista".
   const colIndexToChangeView = 3;
   for (const row of data.slice(START_ROW, data.length)) {
+    let tabPos = 0;
     for (const columnIdx in row) {
       const idx = Number(columnIdx);
       const value = row[idx];
@@ -59,11 +67,15 @@ const main = async () => {
           robot.keyTap("f9"); // submit save product
         } else {
           // tab necesary times before next input
-          let tabs = tabsBeforeInput(idx + 1);
+          let tabs = tabsBeforeInput(idx + 1) - tabPos;
+          console.log({ tabs, tabPos });
           // Current value can be equal to max and by default plattform perform a autotab so we balance
           const balance = slicedValue.length < maxInputLenght ? 0 : -1;
 
-          range(tabs + balance).forEach(() => robot.keyTap("tab"));
+          range(tabs + balance).forEach(() => {
+            robot.keyTap("tab");
+            tabPos += 1;
+          });
         }
       } else {
         // search product page
@@ -77,11 +89,13 @@ const main = async () => {
         // Tab if needed
         if (slicedValue.length < maxInputLenght) {
           robot.keyTap("tab");
+          tabPos += 1;
         }
 
         // enter to product page
         if (idx === colIndexToChangeView - 1) {
           robot.keyTap("enter");
+          tabPos = 0;
         }
       }
     }
