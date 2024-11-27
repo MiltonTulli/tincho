@@ -34,8 +34,8 @@ const tabsBeforeInput = (index) => {
     2: 2,
     3: 0, // description
     4: 8, // vendor
-    5: 26, // CUST PRICE
-    6: 30, // LANDED COST
+    5: 19, // CUST PRICE desde vendor
+    6: 4, // LANDED COST desde cust price
   }[index];
 };
 
@@ -47,7 +47,6 @@ const main = async () => {
   // A partir de este indice debería cambiar de "vista".
   const colIndexToChangeView = 3;
   for (const row of data.slice(START_ROW, data.length)) {
-    let tabPos = 0;
     for (const columnIdx in row) {
       const idx = Number(columnIdx);
       const value = row[idx];
@@ -67,14 +66,12 @@ const main = async () => {
           robot.keyTap("f9"); // submit save product
         } else {
           // tab necesary times before next input
-          let tabs = tabsBeforeInput(idx + 1) - tabPos;
-          console.log({ tabs, tabPos });
+          let tabs = tabsBeforeInput(idx + 1);
           // Current value can be equal to max and by default plattform perform a autotab so we balance
           const balance = slicedValue.length < maxInputLenght ? 0 : -1;
 
           range(tabs + balance).forEach(() => {
             robot.keyTap("tab");
-            tabPos += 1;
           });
         }
       } else {
@@ -89,13 +86,11 @@ const main = async () => {
         // Tab if needed
         if (slicedValue.length < maxInputLenght) {
           robot.keyTap("tab");
-          tabPos += 1;
         }
 
         // enter to product page
         if (idx === colIndexToChangeView - 1) {
           robot.keyTap("enter");
-          tabPos = 0;
         }
       }
     }
